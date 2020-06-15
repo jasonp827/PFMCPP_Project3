@@ -217,13 +217,12 @@ bool Prophet6::engageFX(bool fxCurrentlyOn)
     if(fxCurrentlyOn == true)
     {
         fxOn = false;
-        return fxOn;
     }
     else
     {
         fxCurrentlyOn = true;
-        return fxOn;
     }
+    return fxOn;
 }
 
 struct Tr808
@@ -270,27 +269,13 @@ struct ElectricGuitar
 
 bool ElectricGuitar::shouldPlayMusic(bool isInTune, int numStrings = 6)
 {
-    if(isInTune == true && numStrings == 6)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return (isInTune == true && numStrings == 6);
 }
 
 bool ElectricGuitar::willFeedback(float volumeKnob, float toneKnob, float ampGain)
 {
     float feedbackThreshold = 50.2f;
-    if ((volumeKnob + toneKnob) * ampGain > feedbackThreshold)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return ((volumeKnob + toneKnob) * ampGain > feedbackThreshold);
 }
 void ElectricGuitar::tuneAString(int aStringHz)
 {
@@ -339,34 +324,27 @@ struct Oscillator
     float phase = 0.0f;
 
     bool outputWave(int negativePower, int positivePower);
-    void hardSync(std::vector<float> inputSignal);
+    void hardSync(std::vector<double> inputSignal);
     void receivePitchCV(float inputVoltage, float fmAttenuator);
     void resetPhase();
 };
 
 bool Oscillator::outputWave(int negativePower, int positivePower)
 {
-    if (negativePower >= negativeTwelvePower && positivePower >= positiveTwelvePower)
-    {
-        return true;
-    }
-    else 
-    {
-        return false;
-    }
+    return (negativePower >= negativeTwelvePower && positivePower >= positiveTwelvePower);
 } 
 
 void Oscillator::resetPhase()
 {
     phase = 0.0f;
 }
-void Oscillator::hardSync(std::vector<float> inputSignal)
+void Oscillator::hardSync(std::vector<double> inputSignal)
 {
     //Don't know enough about DFT and how to apply it to coding yet. I apologize for getting a bit overambitious with the methods. resetPhase() function is there so that it can be used but I don't know what its definition should be yet
-    for (int i = 0; i < inputSignal.size(); ++i)
+    for (int i = 0; i < inputSignal.size(); i++)
     {
         //when a value in the array/signal is zero, the signal's cycle is at the beginning of its phase
-        if (inputSignal[i] == 0.0f)
+        if (inputSignal[i] == 0.0)
         {
             resetPhase();
         }
@@ -419,26 +397,12 @@ struct Envelope
 
 bool Envelope::willOutputCV(bool powerOn, bool gateHigh)
 {
-    if (powerOn == true && gateHigh == true)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return (powerOn == true && gateHigh == true);
 }
 
 bool Envelope::receiveGate(bool cycleModeOn)
 {
-    if (cycleModeOn == false)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return (cycleModeOn == false);
 }
 
 void Envelope::cycleMode(bool switchOn)
@@ -462,10 +426,11 @@ struct DualVCA
     int audioOutputs = 2;
     float cvInputOne = 12.02f;
     float cvInputTwo = 0.0f;
+    bool muteOn = false;
 
     void cascadeCV();
     void boost();
-    void mute(bool muteOn);
+    void mute();
 };
 void DualVCA::cascadeCV()
 {
@@ -481,26 +446,12 @@ void DualVCA::cascadeCV()
 
 void DualVCA::boost()
 {
-    if (boostSwitch == false)
-    {
-        boostSwitch = true;
-    }
-    else
-    {
-        boostSwitch = false;
-    }
+    boostSwitch = !boostSwitch;
 }
 
-void DualVCA::mute(bool muteOn)
+void DualVCA::mute()
 {
-    if (muteOn == true)
-    {
-        muteOn = false;
-    }
-    else
-    {
-        muteOn = true;
-    }
+    muteOn = !muteOn;
 }
 
 
@@ -568,14 +519,7 @@ struct ModularSynth
 
 bool ModularSynth::Module::outputVoltage(int negativePower, int positivePower)
 {
-    if (negativePower >= negativeTwelvePower && positivePower >= negativeTwelvePower)
-    {
-        return true;
-    }
-    else 
-    {
-        return false;
-    }
+    return (negativePower >= negativeTwelvePower && positivePower >= negativeTwelvePower);
 }
 
 int ModularSynth::Module::getHP()
@@ -585,14 +529,7 @@ int ModularSynth::Module::getHP()
 
 bool ModularSynth::Module::isEurorack(int u)
 {
-    if(u == 3)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+    return (u == 3);
 }
 
 void ModularSynth::patch(std::string output, std::string input)
