@@ -338,10 +338,11 @@ void Oscillator::resetPhase()
 {
     phase = 0.0f;
 }
+
 void Oscillator::hardSync(std::vector<double> inputSignal)
 {
     //Don't know enough about DFT and how to apply it to coding yet. I apologize for getting a bit overambitious with the methods. resetPhase() function is there so that it can be used but I don't know what its definition should be yet
-    for (int i = 0; i < inputSignal.size(); i++)
+    for (unsigned long i = 0; i < inputSignal.size(); i++)
     {
         //when a value in the array/signal is zero, the signal's cycle is at the beginning of its phase
         if (inputSignal[i] == 0.0)
