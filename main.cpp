@@ -342,7 +342,7 @@ void Oscillator::resetPhase()
 void Oscillator::hardSync(std::vector<double> inputSignal)
 {
     //Don't know enough about DFT and how to apply it to coding yet. I apologize for getting a bit overambitious with the methods. resetPhase() function is there so that it can be used but I don't know what its definition should be yet
-    for (unsigned long i = 0; i < inputSignal.size(); i++)
+    for (unsigned long i = 0; i < inputSignal.size(); ++i)
     {
         //when a value in the array/signal is zero, the signal's cycle is at the beginning of its phase
         if (inputSignal[i] == 0.0)
@@ -390,15 +390,16 @@ struct Envelope
     float sustain = 0.67f;
     int release = 684;
     int hold = 43;
+    bool cycleSwitchOn = true;
 
     bool willOutputCV(bool powerOn, bool gateHigh);
     bool receiveGate(bool cycleModeOn = false);
-    void cycleMode(bool switchOn);
+    void cycleMode();
 };
 
 bool Envelope::willOutputCV(bool powerOn, bool gateHigh)
 {
-    return (powerOn == true && gateHigh == true);
+    return powerOn && gateHigh;
 }
 
 bool Envelope::receiveGate(bool cycleModeOn)
@@ -406,16 +407,9 @@ bool Envelope::receiveGate(bool cycleModeOn)
     return (cycleModeOn == false);
 }
 
-void Envelope::cycleMode(bool switchOn)
+void Envelope::cycleMode()
 {
-    if (switchOn == true)
-    {
-        switchOn = false;
-    }
-    else
-    {
-        switchOn = true;
-    }
+    cycleSwitchOn = !cycleSwitchOn;
 }
 
 struct DualVCA
