@@ -478,8 +478,8 @@ std::vector<int> CVSequencer::arp(int numStepsPressed)
     std::vector<int> arp; 
     for (int i = 0; i <= numStepsPressed; ++i)
     {
-        int stepNum;
-        std::cin >> stepNum;
+        int stepNum = 1;
+        std::cout << stepNum;
         arp.push_back(stepNum);
     }
     return arp;
