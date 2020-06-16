@@ -25,12 +25,15 @@ Thing: Car Wash
         - charge customer
         - detail the car interior
  */
-
+ /*
+*/
 #include <iostream>
 #include <string>
-namespace Part1eVersion 
+#include <vector>
+//namespace Part2Version 
+/*
 {
-struct CarWash        
+struct CarWash
 {
     //number of vacuum cleaners                     
     int numVacuumCleaners = 3; 
@@ -66,7 +69,7 @@ struct CarWash
     Car carBeingServiced;  
 };
 }
-
+*/
 //this is what I want to see after the code is cleaned up: 
 namespace Part2Version
 {
@@ -108,9 +111,48 @@ struct CarWash
     You'll need to insert the Person struct from the video in the space below.
  */
 
+struct Person
+{
+    int age;
+    int height;
+    float hairLength;
+    float GPA;
+    unsigned int SATScore;
+    int distanceTraveled;
 
+    struct Foot
+    {
+        int stepSize(int length);
+        void stepForward();
+    };
 
+    Foot leftFoot;
+    Foot rightFoot;
 
+    void run(int howFast, bool startWithLeftFoot);
+};
+
+int Person::Foot::stepSize(int length)
+{
+    return length;
+}
+
+void Person::Foot::stepForward() {}
+
+void Person::run(int howFast, bool startWithLeftFoot)
+{
+    if(startWithLeftFoot == true)
+    {
+        leftFoot.stepForward();
+        rightFoot.stepForward();
+    }
+    else
+    {
+        rightFoot.stepForward();
+        leftFoot.stepForward();
+    }
+    distanceTraveled += leftFoot.stepSize(howFast) + rightFoot.stepSize(howFast);
+}
 
  /*
  2) provide implementations for the member functions you declared in your 10 user-defined types from the previous video outside of your UDT definitions.
@@ -121,44 +163,21 @@ struct CarWash
  4) After you finish defining each type/function, click the [run] button.  Clear up any errors or warnings as best you can.
  */
 
-/*
-Thing 1) Prophet-6
-5 properties:
-    1)  number of oscillators
-    2)  FX on/off
-    3)  filter cutoff amount
-    4)  distortion amount
-    5)  keyboard notes (int)
-3 things it can do:
-    1)  modulate cutoff
-    2)  play sequence
-    3)  turn on FX
-*/
-
 struct Prophet6
 {
-    //1) number of oscillators
     int numOscillators = 12;
-    //2) FX on/off
-    bool fxOnOff = true;
-    //3) filter cutoff amount
+    bool fxOn = true;
     float filterCutoff = 0.5f;
-    //4) distortion amount
     float distortion = 0.01f;
-    //5) keyboard notes (unison)
     int note = 32;
+    int currentNote;
 
     struct Globals
     {
-        //1) transpose value
         int transposeSemiTone = 0;
-        //2) master tune value in cents
         int masterTuneCents = 0; 
-        //3) midi channel
         int midiChannel = 1;
-        //4) midiClock
         int transmitMidiClock = false; 
-        //5) clock port (MIDI or USB)
         bool usingUSBForMidiClock = false; 
 
         void setTransposition(int semitones); 
@@ -166,312 +185,314 @@ struct Prophet6
         void setMidiChannel(int channel);
     };
 
-    //1) modulate cutoff
     void modCutoff(float filterCutoff);
-    //2) play sequencer
-    void playSequence(int note);
-    //3) turn on FX
-    bool engageFX(bool fxOnOff);
+    void playSequence();
+    bool engageFX(bool fxOn);
 };
 
-/*
-Thing 2) Tr-808
-5 properties:
-    1)  number of voices
-    2)  step trigger (bool)
-    3)  level amount per voice
-    4)  preset number
-    5)  tempo bpm
-3 things it can do:
-    1)  program sequence
-    2)  adjust tone
-    3)  change the world
- */
+void Prophet6::Globals::setTransposition(int semitones)
+{
+    transposeSemiTone += semitones;
+}
+
+void Prophet6::Globals::setMasterTune(int cents)
+{
+    masterTuneCents += cents;
+}
+
+void Prophet6::Globals::setMidiChannel(int channel)
+{
+    midiChannel = channel;
+}
+
+void Prophet6::modCutoff(float lfo)
+{
+    filterCutoff += lfo;
+}
+void Prophet6::playSequence()
+{}
+
+bool Prophet6::engageFX(bool fxCurrentlyOn)
+{
+    if(fxCurrentlyOn == true)
+    {
+        fxOn = false;
+    }
+    else
+    {
+        fxCurrentlyOn = true;
+    }
+    return fxOn;
+}
+
 struct Tr808
 {
-    //1) number of voices
     int numVoices = 11;
-    //2) step trigger
     bool stepTrig = true;
-    //3) level amount per voice in decibels
     float voiceLevel = -2.3f;
-    //4) preset number
     int preset = 12;
-    //5) tempo bpm
     int tempo = 135;
+    bool sequence[16];
+    float tone = 12.5f;
 
-    //1) program sequence using an array of engaged steps as an argument
-    void programSequence(std::vector<bool> sequence = {true, false, false, false}, bool stepTrig = true);
-    //2) adjust tone
-    float adjustTone(float knobTurn);
-    //3) change the world
-    double changeTheWorld(bool musicIsAmazing);
+    void playSequence();
+    void adjustTone(float knobTurn);
+    void adjustLevel(float knobTurn);
 };
 
-/*
-Thing 3) Electric Guitar
-5 properties:
-    1)  volume level
-    2)  tone level
-    3)  number of strings
-    4)  tuning pegs rotation degree
-    5)  seymour duncan pickups (bool)
-3 things it can do:
-    1)  play music
-    2)  feedback
-    3)  guitar spin
- */
+void Tr808::playSequence()
+{}
+
+void Tr808::adjustTone(float knobTurn)
+{
+    tone += knobTurn;
+}
+void Tr808::adjustLevel(float knobTurn)
+{
+    voiceLevel += knobTurn;
+}
+
 struct ElectricGuitar
 {
-    //1)  volume level in decibels
-    float volume = -0.45f;
-    //2)  tone level
+    float volume = 10.0f;
     float tone = 12.2f;
-    //3)  number of strings
     int strings = 6;
-    //4)  tuning pegs rotation degree
-    double tunePeg = 23.43;
-    //5)  seymour duncan pickups
+    float tunePegCents = 12.0f;
     bool seymourDuncanPickups = true;
 
-    //1)  play music
-    bool playMusic(double tunePeg, float volume = 0.0f, int strings = 6);
-    //2)  feedback
-    float feedback(float volume, float tone, float ampGain);
-    //3)  guitar spin
-    bool guitarSpin(bool crowdIsWild);
+    bool shouldPlayMusic(bool isInTune, int numStrings);
+    bool willFeedback(float volume, float tone, float ampGain);
+    void tuneAString(int aStringHz);
 };
 
-/*
-Thing 4) Granular Synth
-5 properties:
-    1)  grain size
-    2)  grain density
-    3)  playback position
-    4)  varispeed of sample
-    5)  random
-3 things it can do:
-    1)  granulate
-    2)  change playback position
-    3)  modulate grain size
- */
+
+
+bool ElectricGuitar::shouldPlayMusic(bool isInTune, int numStrings = 6)
+{
+    return (isInTune == true && numStrings == 6);
+}
+
+bool ElectricGuitar::willFeedback(float volumeKnob, float toneKnob, float ampGain)
+{
+    float feedbackThreshold = 50.2f;
+    return ((volumeKnob + toneKnob) * ampGain > feedbackThreshold);
+}
+void ElectricGuitar::tuneAString(int aStringHz)
+{
+    if (aStringHz != 110)
+    {
+       int tuningDifference = 110 - aStringHz;
+       tunePegCents += tuningDifference;
+    }
+}
+
 struct GranularSynth
 {
-    //1)  grain size in seconds
     float grainSize = 0.6f;
-    //2)  grain density(amount of grains played at once)
     int grainDensity = 7;
-    //3)  playback position
     float playbackPosition = 0.0;
-    //4)  varispeed of sample
     float varispeed = 1.0f;
-    //5)  random
     double random = 0.12;
 
-    //1)  granulate
-    void granulate(float grainSize, int grainDensity, float playbackPosition, float varispeed, double random);
-    //2)  change playback position
-    void slide(float playBackPosition, float modulationInput);
-    //3)  modulate grain size
-    void modGrainSize(float grainSize, float modulationInput);
+    void changeVarispeed(float change);
+    void slide(float modulationInput);
+    void modGrainSize(float modulationInput);
 };
 
-/*
-Thing 5) Oscillators
-5 properties:
-    1)  -12v power consumption
-    2)  +12v power consumption
-    3)  waveshape value
-    4)  output type (sine, saw, waveshaper)
-    5)  FM attenuator value
-3 things it can do:
-    1)  outputs wave
-    2)  hard sync
-    3)  receives pitch CV
- */
-struct Oscillators
+void GranularSynth::changeVarispeed(float change)
 {
-    //1)  -12v power consumption in mA
+    varispeed += change;
+}
+
+void GranularSynth::slide(float modulationInput)
+{
+    playbackPosition += modulationInput;
+}
+
+void GranularSynth::modGrainSize(float modulationInput)
+{
+    grainSize += modulationInput;
+}
+
+struct Oscillator
+{
     int negativeTwelvePower = 40;
-    //2)  +12v power consumption in mA
     int positiveTwelvePower = 30;
-    //3)  waveshape value
     float waveshape = 12.4f;
-    //4)  output type (sine, saw, waveshaper)
     int outputType = 2;
-    //5)  FM attenuator value
     float fmAttenuator = 0.46f;
+    float phase = 0.0f;
 
-    //1)  outputs wave
-    bool outputWave(int negativeTwelvePower, int positiveTwelvePower);
-    //2)  hard sync
-    void hardSync(float inputSignal, bool hardSyncOnOff);
-    //3)  receives pitch CV
+    bool outputWave(int negativePower, int positivePower);
+    void hardSync(std::vector<double> inputSignal);
     void receivePitchCV(float inputVoltage, float fmAttenuator);
+    void resetPhase();
 };
 
-/*
-Thing 6) Filters
-5 properties:
-    1)  filter type (HP, LP, BP)
-    2)  FM attenuator value
-    3)  cutoff value
-    4)  resonance value
-    5)  gain value
-3 things it can do:
-    1)  filter audio
-    2)  track 1v/oct
-    3)  change filter cutoff
- */
-struct Filters
+bool Oscillator::outputWave(int negativePower, int positivePower)
 {
-    //1)  filter type (HP, LP, BP)
+    return (negativePower >= negativeTwelvePower && positivePower >= positiveTwelvePower);
+} 
+
+void Oscillator::resetPhase()
+{
+    phase = 0.0f;
+}
+
+void Oscillator::hardSync(std::vector<double> inputSignal)
+{
+    //Don't know enough about DFT and how to apply it to coding yet. I apologize for getting a bit overambitious with the methods. resetPhase() function is there so that it can be used but I don't know what its definition should be yet
+    for (unsigned long i = 0; i < inputSignal.size(); ++i)
+    {
+        //when a value in the array/signal is zero, the signal's cycle is at the beginning of its phase
+        if (inputSignal[i] == 0.0)
+        {
+            resetPhase();
+        }
+    }
+}
+
+
+struct Filter
+{
     int filterType = 1;
-    //2)  FM attenuator value
-    float fmAttenuator = 43.23f;
-    //3)  cutoff value
+    float fmAttenuator = 0.56f;
     float cutoff = 56.23f;
-    //4)  resonance value
     float resonance = 15.54f;
-    //5)  gain value +dB
     float gain = 12.3f;
 
-    //1)  filter audio
-    void filter(int filterType, float fmAttenuator, float cutoff, float resonance, float gain);
-    //2)  track 1v/oct
-    void trackPitch(float cutoff, float fmAttenuator);
-    //3)  change filter cutoff
-    void modFilter(float cutoff, float fmAttenuator);
+    void changeResonance(float change);
+    void trackPitch(float cv);
+    void modFilter(float cv);
 };
 
-/*
-Thing 7) Envelopes
-5 properties:
-    1)  attack time
-    2)  decay time
-    3)  sustain level
-    4)  release time
-    5)  hold time
-3 things it can do:
-    1)  output CV
-    2)  receive gate/trigger
-    3)  engage cycle mode
- */
-struct Envelopes FIXME: is this representing ONE envelope or several envelopes?
+void Filter::changeResonance(float change)
 {
-    //1)  attack time in ms
+    resonance += change;
+}
+
+void Filter::trackPitch(float cv)
+{
+    cutoff += cv;
+}
+
+void Filter::modFilter(float cv)
+{
+    //fmAttenuator works between values of 0.0f and 1.0f
+    cutoff += cv * fmAttenuator;
+    
+}
+
+struct Envelope
+{
     int attack = 243;
-    //2)  decay time in ms
     int decay = 501;
-    //3)  sustain level in percentage
     float sustain = 0.67f;
-    //4)  release time in ms
     int release = 684;
-    //5)  hold time in ms
     int hold = 43;
+    bool cycleSwitchOn = true;
 
-    //1)  output CV
-    float outputCV(bool powerOn, bool gateHigh);
-    //2)  receive gate/trigger
-    bool receive(bool cycleModeOnOff = false);
-    //3)  engage cycle mode
-    bool cycleMode(bool switchPosition);
+    bool willOutputCV(bool powerOn, bool gateHigh);
+    bool receiveGate(bool cycleModeOn = false);
+    void cycleMode();
 };
 
-/*
-Thing 8) VCAs
-5 properties:
-    1)  number of audio inputs
-    2)  number of cv inputs
-    3)  cascading cv inputs (bool)
-    4)  boost switch
-    5)  number of audio outputs
-3 things it can do:
-    1)  receive cv
-    2)  output audio/cv
-    3)  mute output
- */
-struct VCAs FIXME: is this representing ONE VCA or multiple VCAs?
+bool Envelope::willOutputCV(bool powerOn, bool gateHigh)
 {
-    //1)  number of audio inputs
-    int audioInputs = 4;
-    //2)  number of cv inputs
-    int cvInputs = 4;
-    //3)  cascading cv inputs
-    bool cascadingCV = true;
-    //4)  boost switch
+    return powerOn && gateHigh;
+}
+
+bool Envelope::receiveGate(bool cycleModeOn)
+{
+    return (cycleModeOn == false);
+}
+
+void Envelope::cycleMode()
+{
+    cycleSwitchOn = !cycleSwitchOn;
+}
+
+struct DualVCA
+{
+    int audioInputs = 2;
+    int cvInputs = 2;
+    bool cvInputUsed = false;
     bool boostSwitch = true;
-    //5)  number of audio outputs
-    int audioOutputs = 4;
+    int audioOutputs = 2;
+    float cvInputOne = 12.02f;
+    float cvInputTwo = 0.0f;
+    bool muteOn = false;
 
-
-    //1)  receive cv
-    void receiveCV(int cvInputs);
-    //2)  output audio/cv
-    void output();
-    //3)  mute output
-    void mute(bool muteSwitch);
+    void cascadeCV();
+    void boost();
+    void mute();
 };
+void DualVCA::cascadeCV()
+{
+    for (int i = 0; i <= cvInputs; ++i)
+    {
+        if (cvInputUsed == false)
+        {
+            cvInputTwo = cvInputOne;
+        }
+    }
+}
 
-/*
-Thing 9) CV Sequencer
-5 properties:
-    1)  number of channels
-    2)  channel output level
-    3)  number of steps
-    4)  clock mode(slave or master)
-    5)  scale select (int)
-3 things it can do:
-    1)  output cv
-    2)  receive clock
-    3)  arpeggiate steps
- */
+
+void DualVCA::boost()
+{
+    boostSwitch = !boostSwitch;
+}
+
+void DualVCA::mute()
+{
+    muteOn = !muteOn;
+}
+
+
 struct CVSequencer
 {
-    //1)  number of channels
     int cvChannels = 8;
-    //2)  channel output level
     float outputLevel = 2.3f;
-    //3)  number of steps
     int steps = 16;
-    //4)  clock mode(slave or master)
-    bool clockMode = false;
-    //5)  scale select
+    int trigPerStep = 1;
     int scale = 2;
 
-    //1)  output cv
-    bool output(bool powerOn);
-    //2)  receive clock
-    bool receiveClock(bool clockMode);
-    //3)  arpeggiate steps
-    bool arp(bool stepsOn, std::vector<int> stepOrder[]);
+    void changeNumSteps(int newNumSteps);
+    void divideClock(int division);
+    std::vector<int> arp(int numStepsPressed);
 };
 
-/*
-Thing 10) Modular Synth
-5 properties:
-    1)  oscillators
-    2)  filters
-    3)  envelopes
-    4)  VCAs    
-    5)  CV Sequencer
-3 things it can do:
-    1)  changes pitch
-    2)  cross modulates
-    3)  modulate decay time of AD envelope
- */
+void CVSequencer::changeNumSteps(int newNumSteps)
+{
+    steps = newNumSteps;
+}
+
+void CVSequencer::divideClock(int division)
+{
+    trigPerStep *= division;
+}
+
+std::vector<int> CVSequencer::arp(int numStepsPressed)
+{
+    std::vector<int> arp; 
+    for (int i = 0; i <= numStepsPressed; ++i)
+    {
+        int stepNum = 1;
+        std::cout << stepNum;
+        arp.push_back(stepNum);
+    }
+    return arp;
+}
+
 struct ModularSynth
 {
-    //1)  oscillators
-    Oscillators oscillators;
-    //2)  filters
-    Filters flters;
-    //3)  envelopes
-    Envelopes envelopes;
-    //4)  VCAs    
-    VCAs vcas;
-    //5)  CV Sequencer
+    Oscillator oscillator;
+    Filter flter;
+    Envelope envelope;  
+    DualVCA vca;
     CVSequencer cvsequencer;
+    int emptyHP = 12;
 
     struct Module
     {
@@ -481,18 +502,50 @@ struct ModularSynth
         bool threeU = true;
         int numberOfInputs;
 
-        void outputVoltage(int negativeTwelvePower, int positiveTwelvePower);
-        void receiveVoltage();
-        void processVoltage(float inputValues);
+        bool outputVoltage(int negativePower, int positivePower);
+        int getHP();
+        bool isEurorack(int u);
     };
 
-    //1)  changes pitch
-    void changePitch(void receivePitchCV(float inputVoltage, float fmAttenuator));
-    //2)  cross modulates
-    void crossMod(Envelopes);
-    //3)  modulate decay time of AD envelope
-    void modDecayEnv(int decay);
+    void patch(std::string output, std::string input);
+    void unpatch(std::string output, std::string input);
+    void modDecayEnv(std::string cvSource);
 };
+
+bool ModularSynth::Module::outputVoltage(int negativePower, int positivePower)
+{
+    return (negativePower >= negativeTwelvePower && positivePower >= negativeTwelvePower);
+}
+
+int ModularSynth::Module::getHP()
+{
+    return hp;
+}
+
+bool ModularSynth::Module::isEurorack(int u)
+{
+    return (u == 3);
+}
+
+void ModularSynth::patch(std::string output, std::string input)
+{
+    std::cout << output << " has been patched into " << input << "!\n";
+}
+
+void ModularSynth::unpatch(std::string output, std::string input)
+{
+    std::cout << output << " has been unpatched from " << input << "!\n";
+}
+
+void ModularSynth::modDecayEnv(std::string cvSource)
+{
+    patch(cvSource, "Decay");
+}
+
+
+
+
+
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
