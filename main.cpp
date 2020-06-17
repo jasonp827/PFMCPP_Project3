@@ -68,17 +68,17 @@ struct Prophet6
 };
 
 Prophet6::Prophet6() :
-    fxOn(true),
-    filterCutoff(0.5f)
-    {}
+fxOn(true),
+filterCutoff(0.5f)
+{}
 
 Prophet6::Globals::Globals() :
-    transposeSemiTone(0),
-    masterTuneCents(0),
-    midiChannel(1),     
-    transmitMidiClock(false),
-    usingUSBForMidiClock(false)
-    {}
+transposeSemiTone(0),
+masterTuneCents(0),
+midiChannel(1),     
+transmitMidiClock(false),
+usingUSBForMidiClock(false)
+{}
 
 void Prophet6::Globals::setTransposition(int semitones)
 {
@@ -202,12 +202,12 @@ struct GranularSynth
 };
 
 GranularSynth::GranularSynth() :
-    grainSize(1.0f),
-    grainDensity(7),
-    playbackPosition(0.0f),
-    varispeed(1.0f),
-    random(0.0)
-    {}
+grainSize(1.0f),
+grainDensity(7),
+playbackPosition(0.0f),
+varispeed(1.0f),
+random(0.0)
+{}
 
 void GranularSynth::changeVarispeed(float change)
 {
@@ -241,11 +241,11 @@ struct Oscillator
 };
 
 Oscillator::Oscillator() :
-    negativeTwelvePower(40),
-    positiveTwelvePower(30),
-    waveshape(12.4f),
-    outputType(2)
-    {}
+negativeTwelvePower(40),
+positiveTwelvePower(30),
+waveshape(12.4f),
+outputType(2)
+{}
 
 bool Oscillator::outputWave(int negativePower, int positivePower)
 {
@@ -356,10 +356,10 @@ struct VCA
 };
 
 VCA::VCA() : 
-    audioInputs(2),
-    cvInputs(2),
-    audioOutputs(2),
-    muteOn(false)
+audioInputs(2),
+cvInputs(2),
+audioOutputs(2),
+muteOn(false)
 {}
 
 void VCA::cascadeCV()
@@ -401,9 +401,9 @@ struct CVSequencer
 };
 
 CVSequencer::CVSequencer() :
-    cvChannels(8),
-    outputLevel(0),
-    scale(2)
+cvChannels(8),
+outputLevel(0),
+scale(2)
 {}
 
 void CVSequencer::changeNumSteps(int newNumSteps)
@@ -458,7 +458,7 @@ struct ModularSynth
 };
 
 ModularSynth::ModularSynth() :
-    emptyHP(12)
+emptyHP(12)
 {}
 
 ModularSynth::Module::Module()
