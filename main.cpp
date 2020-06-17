@@ -60,9 +60,6 @@ int main()
 
 //insert Example::main() into main() of user's repo.
 
-
-
-
 struct Prophet6
 {
     Prophet6();
@@ -193,8 +190,6 @@ ElectricGuitar::ElectricGuitar()
     tone = 10.0f;
     seymourDuncanPickups = true;
 }
-
-
 
 bool ElectricGuitar::shouldPlayMusic(bool isInTune, int numStrings = 6)
 {
@@ -577,44 +572,30 @@ int main()
 {
     Example::main();
 
-Prophet6 myProphet6, yourProphet6;
-Prophet6::Globals myGlobals;
+    Prophet6 myProphet6, yourProphet6;
+    Prophet6::Globals myGlobals;
 
-Tr808 aTr808;
+    Tr808 aTr808;
+    ElectricGuitar myElectricGuitar;
+    GranularSynth morphagene;
+    Oscillator sto, csL;
+    Filter sem20, ladderFilter;
+    Envelope mnFunction, quadra;
+    VCA dualVCA;
+    CVSequencer voltageBlock;
+    ModularSynth myEurorack;
 
-ElectricGuitar myElectricGuitar;
+    ModularSynth::Module echophon, mixUp;
 
-GranularSynth morphagene;
+    myEurorack.patch("STO sine output", "Echophon audio in");
 
-Oscillator sto, csL;
+    myGlobals.setMidiChannel(1);
 
-Filter sem20, ladderFilter;
+    myElectricGuitar.shouldPlayMusic(true, 6);
 
-Envelope mnFunction, quadra;
+    std::cout << "Is guitar tone too bright? " << (myElectricGuitar.tone > 9.0f ? "Yes" : "No") << "\n";
 
-VCA dualVCA;
-
-CVSequencer voltageBlock;
-
-ModularSynth myEurorack;
-
-
-ModularSynth::Module echophon, mixUp;
-
-myEurorack.patch("STO sine output", "Echophon audio in");
-
-myGlobals.setMidiChannel(1);
-
-myElectricGuitar.shouldPlayMusic(true, 6);
-
-std::cout << "Is guitar tone too bright? " << (myElectricGuitar.tone > 9.0f ? "Yes" : "No") << "\n";
-
-std::cout << "Why isn't the MIDI clock not syncing on the Prophet? \n MIDIsync: " << myGlobals.transmitMidiClock << "\nOh, MIDI sync is disabled.""\n";
-
-
-
-
-
+    std::cout << "Why isn't the MIDI clock not syncing on the Prophet? \n MIDIsync: " << myGlobals.transmitMidiClock << "\nOh, MIDI sync is disabled.""\n";
 
     std::cout << "good to go!" << std::endl;
 }
