@@ -7,7 +7,7 @@
 
  On this new branch:
 
- 1) Add a constructor for each User-Defined-Type.
+ 1) Add a constructor for each User-Defined-Type. done
  
  2) amend some of your UDT's member functions to print out something interesting via std::cout
  
@@ -24,6 +24,7 @@
  */
 
 #include <iostream>
+#include <vector>
 namespace Example 
 {
 struct UDT  // my user defined type named 'UDT'
@@ -59,25 +60,24 @@ int main()
 
 //insert Example::main() into main() of user's repo.
 
-
-
-
 struct Prophet6
 {
+    Prophet6();
     int numOscillators = 12;
-    bool fxOn = true;
-    float filterCutoff = 0.5f;
+    bool fxOn;
+    float filterCutoff;
     float distortion = 0.01f;
     int note = 32;
     int currentNote;
 
     struct Globals
     {
-        int transposeSemiTone = 0;
-        int masterTuneCents = 0; 
-        int midiChannel = 1;
-        int transmitMidiClock = false; 
-        bool usingUSBForMidiClock = false; 
+        Globals();
+        int transposeSemiTone;
+        int masterTuneCents; 
+        int midiChannel;
+        int transmitMidiClock; 
+        bool usingUSBForMidiClock; 
 
         void setTransposition(int semitones); 
         void setMasterTune(int cents);
@@ -86,22 +86,40 @@ struct Prophet6
 
     void modCutoff(float filterCutoff);
     void playSequence();
-    bool engageFX(bool fxOn);
+    void engageFX();
 };
+
+Prophet6::Prophet6()
+{
+    fxOn = true;
+    filterCutoff = 0.5f;
+}
+
+Prophet6::Globals::Globals()
+{
+    transposeSemiTone = 0;
+    masterTuneCents = 0; 
+    midiChannel = 1;        
+    transmitMidiClock = false; 
+    usingUSBForMidiClock = false; 
+}
 
 void Prophet6::Globals::setTransposition(int semitones)
 {
     transposeSemiTone += semitones;
+    std::cout << "Semi: " << semitones << "\n";
 }
 
 void Prophet6::Globals::setMasterTune(int cents)
 {
     masterTuneCents += cents;
+    std::cout << "Cent: " << cents << "\n";
 }
 
 void Prophet6::Globals::setMidiChannel(int channel)
 {
     midiChannel = channel;
+    std::cout << "MiCh: " << midiChannel << "\n";
 }
 
 void Prophet6::modCutoff(float lfo)
@@ -111,34 +129,35 @@ void Prophet6::modCutoff(float lfo)
 void Prophet6::playSequence()
 {}
 
-bool Prophet6::engageFX(bool fxCurrentlyOn)
+void Prophet6::engageFX()
 {
-    if(fxCurrentlyOn == true)
-    {
-        fxOn = false;
-    }
-    else
-    {
-        fxCurrentlyOn = true;
-    }
-    return fxOn;
+    fxOn = !fxOn;
+    std::cout << "FX: "<< (fxOn == true ? "On" : "Off") << "\n";
 }
 
 struct Tr808
 {
+    Tr808();
     int numVoices = 11;
-    bool stepTrig = true;
-    float voiceLevel = -2.3f;
-    int preset = 12;
+    bool stepTrig;
+    float voiceLevel;
+    int preset;
     int tempo = 135;
     bool sequence[16];
-    float tone = 12.5f;
+    float tone;
 
     void playSequence();
     void adjustTone(float knobTurn);
     void adjustLevel(float knobTurn);
 };
 
+Tr808::Tr808()
+{
+    stepTrig = true;
+    voiceLevel = 0.0f;
+    preset = 0;
+    tone = 12.5f;
+}
 void Tr808::playSequence()
 {}
 
@@ -153,22 +172,37 @@ void Tr808::adjustLevel(float knobTurn)
 
 struct ElectricGuitar
 {
-    float volume = 10.0f;
-    float tone = 12.2f;
+    ElectricGuitar();
+    float volume;
+    float tone;
     int strings = 6;
     float tunePegCents = 12.0f;
-    bool seymourDuncanPickups = true;
+    bool seymourDuncanPickups;
 
     bool shouldPlayMusic(bool isInTune, int numStrings);
     bool willFeedback(float volume, float tone, float ampGain);
     void tuneAString(int aStringHz);
 };
 
-
+ElectricGuitar::ElectricGuitar()
+{
+    volume = 10.0f;
+    tone = 10.0f;
+    seymourDuncanPickups = true;
+}
 
 bool ElectricGuitar::shouldPlayMusic(bool isInTune, int numStrings = 6)
 {
-    return (isInTune == true && numStrings == 6);
+    if(isInTune == true && numStrings == 6)
+    {
+        std::cout << "Shred it!\n";
+        return true;
+    }
+    else
+    {
+        std::cout <<  "String up and tune first!\n";
+        return false;
+    }
 }
 
 bool ElectricGuitar::willFeedback(float volumeKnob, float toneKnob, float ampGain)
@@ -187,22 +221,32 @@ void ElectricGuitar::tuneAString(int aStringHz)
 
 struct GranularSynth
 {
-    float grainSize = 0.6f;
-    int grainDensity = 7;
-    float playbackPosition = 0.0;
-    float varispeed = 1.0f;
-    double random = 0.12;
+    GranularSynth();
+    float grainSize;
+    int grainDensity;
+    float playbackPosition;
+    float varispeed;
+    double random;
 
     void changeVarispeed(float change);
     void slide(float modulationInput);
     void modGrainSize(float modulationInput);
 };
 
+GranularSynth::GranularSynth()
+{
+    grainSize = 1.0f;
+    grainDensity = 7;
+    playbackPosition = 0.0f;
+    varispeed = 1.0f;
+    random = 0.0;
+}
+
 void GranularSynth::changeVarispeed(float change)
 {
     varispeed += change;
+    std::cout << "varispeed: " << varispeed << "\n";
 }
-
 void GranularSynth::slide(float modulationInput)
 {
     playbackPosition += modulationInput;
@@ -215,11 +259,12 @@ void GranularSynth::modGrainSize(float modulationInput)
 
 struct Oscillator
 {
-    int negativeTwelvePower = 40;
-    int positiveTwelvePower = 30;
-    float waveshape = 12.4f;
-    int outputType = 2;
-    float fmAttenuator = 0.46f;
+    Oscillator();
+    int negativeTwelvePower;
+    int positiveTwelvePower;
+    float waveshape;
+    int outputType;
+    float fmAttenuator = 0.0f;
     float phase = 0.0f;
 
     bool outputWave(int negativePower, int positivePower);
@@ -227,6 +272,14 @@ struct Oscillator
     void receivePitchCV(float inputVoltage, float fmAttenuator);
     void resetPhase();
 };
+
+Oscillator::Oscillator()
+{
+    negativeTwelvePower = 40;
+    positiveTwelvePower = 30;
+    waveshape = 12.4f;
+    outputType = 2;
+}
 
 bool Oscillator::outputWave(int negativePower, int positivePower)
 {
@@ -254,16 +307,26 @@ void Oscillator::hardSync(std::vector<double> inputSignal)
 
 struct Filter
 {
-    int filterType = 1;
-    float fmAttenuator = 0.56f;
-    float cutoff = 56.23f;
-    float resonance = 15.54f;
-    float gain = 12.3f;
+    Filter();
+    int filterType;
+    float fmAttenuator;
+    float cutoff;
+    float resonance;
+    float gain;
 
     void changeResonance(float change);
     void trackPitch(float cv);
     void modFilter(float cv);
 };
+
+Filter::Filter()
+{
+    filterType = 1;
+    fmAttenuator = 0.0f;
+    cutoff = 1.0f;
+    resonance = 0.0f;
+    gain = 10.0f;
+}
 
 void Filter::changeResonance(float change)
 {
@@ -284,17 +347,28 @@ void Filter::modFilter(float cv)
 
 struct Envelope
 {
-    int attack = 243;
-    int decay = 501;
-    float sustain = 0.67f;
-    int release = 684;
-    int hold = 43;
-    bool cycleSwitchOn = true;
+    Envelope();
+    int attack;
+    int decay;
+    float sustain;
+    int release;
+    int hold;
+    bool cycleSwitchOn;
 
     bool willOutputCV(bool powerOn, bool gateHigh);
     bool receiveGate(bool cycleModeOn = false);
     void cycleMode();
 };
+
+Envelope::Envelope()
+{
+    attack = 0;
+    decay = 500;
+    sustain = 0.5f;
+    release = 200;
+    hold = 0;
+    cycleSwitchOn = false;
+}
 
 bool Envelope::willOutputCV(bool powerOn, bool gateHigh)
 {
@@ -311,22 +385,32 @@ void Envelope::cycleMode()
     cycleSwitchOn = !cycleSwitchOn;
 }
 
-struct DualVCA
+struct VCA
 {
-    int audioInputs = 2;
-    int cvInputs = 2;
+    VCA();
+    int audioInputs;
+    int cvInputs;
     bool cvInputUsed = false;
     bool boostSwitch = true;
-    int audioOutputs = 2;
+    int audioOutputs;
     float cvInputOne = 12.02f;
     float cvInputTwo = 0.0f;
-    bool muteOn = false;
+    bool muteOn;
 
     void cascadeCV();
     void boost();
     void mute();
 };
-void DualVCA::cascadeCV()
+
+VCA::VCA()
+{
+    audioInputs = 2;
+    cvInputs = 2;
+    audioOutputs = 2;
+    muteOn = false;
+}
+
+void VCA::cascadeCV()
 {
     for (int i = 0; i <= cvInputs; ++i)
     {
@@ -338,12 +422,12 @@ void DualVCA::cascadeCV()
 }
 
 
-void DualVCA::boost()
+void VCA::boost()
 {
     boostSwitch = !boostSwitch;
 }
 
-void DualVCA::mute()
+void VCA::mute()
 {
     muteOn = !muteOn;
 }
@@ -351,16 +435,24 @@ void DualVCA::mute()
 
 struct CVSequencer
 {
-    int cvChannels = 8;
-    float outputLevel = 2.3f;
+    CVSequencer();
+    int cvChannels;
+    float outputLevel;
     int steps = 16;
     int trigPerStep = 1;
-    int scale = 2;
+    int scale;
 
     void changeNumSteps(int newNumSteps);
     void divideClock(int division);
     std::vector<int> arp(int numStepsPressed);
 };
+
+CVSequencer::CVSequencer()
+{
+    cvChannels = 8;
+    outputLevel = 0;
+    scale = 2;
+}
 
 void CVSequencer::changeNumSteps(int newNumSteps)
 {
@@ -386,30 +478,45 @@ std::vector<int> CVSequencer::arp(int numStepsPressed)
 
 struct ModularSynth
 {
+    ModularSynth();
     Oscillator oscillator;
     Filter flter;
     Envelope envelope;  
-    DualVCA vca;
+    VCA vca;
     CVSequencer cvsequencer;
-    int emptyHP = 12;
+    int emptyHP;
 
     struct Module
     {
+        Module();
         int negativeTwelvePower;
         int positiveTwelvePower;
         int hp;
-        bool threeU = true;
+        int u;
         int numberOfInputs;
 
         bool outputVoltage(int negativePower, int positivePower);
         int getHP();
-        bool isEurorack(int u);
+        bool isEurorack();
     };
 
     void patch(std::string output, std::string input);
     void unpatch(std::string output, std::string input);
     void modDecayEnv(std::string cvSource);
 };
+
+ModularSynth::ModularSynth()
+{
+    emptyHP = 12;
+}
+ModularSynth::Module::Module()
+{
+    negativeTwelvePower = 0;
+    positiveTwelvePower = 0;
+    hp = 0;
+    u = 0;
+    numberOfInputs = 0;
+}
 
 bool ModularSynth::Module::outputVoltage(int negativePower, int positivePower)
 {
@@ -421,7 +528,7 @@ int ModularSynth::Module::getHP()
     return hp;
 }
 
-bool ModularSynth::Module::isEurorack(int u)
+bool ModularSynth::Module::isEurorack()
 {
     return (u == 3);
 }
@@ -464,5 +571,31 @@ void ModularSynth::modDecayEnv(std::string cvSource)
 int main()
 {
     Example::main();
+
+    Prophet6 myProphet6, yourProphet6;
+    Prophet6::Globals myGlobals;
+
+    Tr808 aTr808;
+    ElectricGuitar myElectricGuitar;
+    GranularSynth morphagene;
+    Oscillator sto, csL;
+    Filter sem20, ladderFilter;
+    Envelope mnFunction, quadra;
+    VCA dualVCA;
+    CVSequencer voltageBlock;
+    ModularSynth myEurorack;
+
+    ModularSynth::Module echophon, mixUp;
+
+    myEurorack.patch("STO sine output", "Echophon audio in");
+
+    myGlobals.setMidiChannel(1);
+
+    myElectricGuitar.shouldPlayMusic(true, 6);
+
+    std::cout << "Is guitar tone too bright? " << (myElectricGuitar.tone > 9.0f ? "Yes" : "No") << "\n";
+
+    std::cout << "Why isn't the MIDI clock not syncing on the Prophet? \n MIDIsync: " << myGlobals.transmitMidiClock << "\nOh, MIDI sync is disabled.""\n";
+
     std::cout << "good to go!" << std::endl;
 }
