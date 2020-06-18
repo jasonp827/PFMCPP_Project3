@@ -13,6 +13,7 @@
  */
 
 #include <iostream>
+#include <vector>
 namespace Example 
 {
 struct UDT  
@@ -66,20 +67,18 @@ struct Prophet6
     void engageFX();
 };
 
-Prophet6::Prophet6()
-{
-    fxOn = true;
-    filterCutoff = 0.5f;
-}
+Prophet6::Prophet6() :
+fxOn(true),
+filterCutoff(0.5f)
+{}
 
-Prophet6::Globals::Globals()
-{
-    transposeSemiTone = 0;
-    masterTuneCents = 0; 
-    midiChannel = 1;        
-    transmitMidiClock = false; 
-    usingUSBForMidiClock = false; 
-}
+Prophet6::Globals::Globals() :
+transposeSemiTone(0),
+masterTuneCents(0),
+midiChannel(1),     
+transmitMidiClock(false),
+usingUSBForMidiClock(false)
+{}
 
 void Prophet6::Globals::setTransposition(int semitones)
 {
@@ -116,12 +115,12 @@ struct Tr808
 {
     Tr808();
     int numVoices = 11;
-    bool stepTrig;
-    float voiceLevel;
-    int preset;
+    bool stepTrig{true};
+    float voiceLevel{0.0f};
+    int preset{0};
     int tempo = 135;
     bool sequence[16];
-    float tone;
+    float tone{12.5};
 
     void playSequence();
     void adjustTone(float knobTurn);
@@ -129,12 +128,8 @@ struct Tr808
 };
 
 Tr808::Tr808()
-{
-    stepTrig = true;
-    voiceLevel = 0.0f;
-    preset = 0;
-    tone = 12.5f;
-}
+{}
+
 void Tr808::playSequence()
 {}
 
@@ -150,11 +145,11 @@ void Tr808::adjustLevel(float knobTurn)
 struct ElectricGuitar
 {
     ElectricGuitar();
-    float volume;
-    float tone;
+    float volume{10.0f};
+    float tone{10.0f};
     int strings = 6;
     float tunePegCents = 12.0f;
-    bool seymourDuncanPickups;
+    bool seymourDuncanPickups{true};
 
     bool shouldPlayMusic(bool isInTune, int numStrings);
     bool willFeedback(float volume, float tone, float ampGain);
@@ -162,11 +157,7 @@ struct ElectricGuitar
 };
 
 ElectricGuitar::ElectricGuitar()
-{
-    volume = 10.0f;
-    tone = 10.0f;
-    seymourDuncanPickups = true;
-}
+{}
 
 bool ElectricGuitar::shouldPlayMusic(bool isInTune, int numStrings = 6)
 {
@@ -210,14 +201,13 @@ struct GranularSynth
     void modGrainSize(float modulationInput);
 };
 
-GranularSynth::GranularSynth()
-{
-    grainSize = 1.0f;
-    grainDensity = 7;
-    playbackPosition = 0.0f;
-    varispeed = 1.0f;
-    random = 0.0;
-}
+GranularSynth::GranularSynth() :
+grainSize(1.0f),
+grainDensity(7),
+playbackPosition(0.0f),
+varispeed(1.0f),
+random(0.0)
+{}
 
 void GranularSynth::changeVarispeed(float change)
 {
@@ -250,13 +240,12 @@ struct Oscillator
     void resetPhase();
 };
 
-Oscillator::Oscillator()
-{
-    negativeTwelvePower = 40;
-    positiveTwelvePower = 30;
-    waveshape = 12.4f;
-    outputType = 2;
-}
+Oscillator::Oscillator() :
+negativeTwelvePower(40),
+positiveTwelvePower(30),
+waveshape(12.4f),
+outputType(2)
+{}
 
 bool Oscillator::outputWave(int negativePower, int positivePower)
 {
@@ -285,11 +274,11 @@ void Oscillator::hardSync(std::vector<double> inputSignal)
 struct Filter
 {
     Filter();
-    int filterType;
-    float fmAttenuator;
-    float cutoff;
-    float resonance;
-    float gain;
+    int filterType{1};
+    float fmAttenuator{0.0f};
+    float cutoff{1.0f};
+    float resonance{0.0f};
+    float gain{10.0f};
 
     void changeResonance(float change);
     void trackPitch(float cv);
@@ -297,13 +286,7 @@ struct Filter
 };
 
 Filter::Filter()
-{
-    filterType = 1;
-    fmAttenuator = 0.0f;
-    cutoff = 1.0f;
-    resonance = 0.0f;
-    gain = 10.0f;
-}
+{}
 
 void Filter::changeResonance(float change)
 {
@@ -325,12 +308,12 @@ void Filter::modFilter(float cv)
 struct Envelope
 {
     Envelope();
-    int attack;
-    int decay;
-    float sustain;
-    int release;
-    int hold;
-    bool cycleSwitchOn;
+    int attack{0};
+    int decay{500};
+    float sustain{0.5f};
+    int release{200};
+    int hold{0};
+    bool cycleSwitchOn{false};
 
     bool willOutputCV(bool powerOn, bool gateHigh);
     bool receiveGate(bool cycleModeOn = false);
@@ -338,14 +321,7 @@ struct Envelope
 };
 
 Envelope::Envelope()
-{
-    attack = 0;
-    decay = 500;
-    sustain = 0.5f;
-    release = 200;
-    hold = 0;
-    cycleSwitchOn = false;
-}
+{}
 
 bool Envelope::willOutputCV(bool powerOn, bool gateHigh)
 {
@@ -379,13 +355,12 @@ struct VCA
     void mute();
 };
 
-VCA::VCA()
-{
-    audioInputs = 2;
-    cvInputs = 2;
-    audioOutputs = 2;
-    muteOn = false;
-}
+VCA::VCA() : 
+audioInputs(2),
+cvInputs(2),
+audioOutputs(2),
+muteOn(false)
+{}
 
 void VCA::cascadeCV()
 {
@@ -407,6 +382,7 @@ void VCA::boost()
 void VCA::mute()
 {
     muteOn = !muteOn;
+    std::cout << "Mute: " << (muteOn == true ? "On" : "Off") << "\n";
 }
 
 
@@ -424,12 +400,11 @@ struct CVSequencer
     std::vector<int> arp(int numStepsPressed);
 };
 
-CVSequencer::CVSequencer()
-{
-    cvChannels = 8;
-    outputLevel = 0;
-    scale = 2;
-}
+CVSequencer::CVSequencer() :
+cvChannels(8),
+outputLevel(0),
+scale(2)
+{}
 
 void CVSequencer::changeNumSteps(int newNumSteps)
 {
@@ -466,11 +441,11 @@ struct ModularSynth
     struct Module
     {
         Module();
-        int negativeTwelvePower;
-        int positiveTwelvePower;
-        int hp;
-        int u;
-        int numberOfInputs;
+        int negativeTwelvePower{0};
+        int positiveTwelvePower{0};
+        int hp{0};
+        int u{0};
+        int numberOfInputs{0};
 
         bool outputVoltage(int negativePower, int positivePower);
         int getHP();
@@ -482,18 +457,12 @@ struct ModularSynth
     void modDecayEnv(std::string cvSource);
 };
 
-ModularSynth::ModularSynth()
-{
-    emptyHP = 12;
-}
+ModularSynth::ModularSynth() :
+emptyHP(12)
+{}
+
 ModularSynth::Module::Module()
-{
-    negativeTwelvePower = 0;
-    positiveTwelvePower = 0;
-    hp = 0;
-    u = 0;
-    numberOfInputs = 0;
-}
+{}
 
 bool ModularSynth::Module::outputVoltage(int negativePower, int positivePower)
 {
