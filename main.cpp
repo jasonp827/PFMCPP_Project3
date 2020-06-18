@@ -27,6 +27,8 @@ Create a branch named Part5
  */
 
 #include <iostream>
+#include <vector>
+#include <algorithm>
 namespace Example 
 {
 struct Bar 
@@ -63,10 +65,6 @@ int main()
 
 //call Example::main() in main()
 
-
-
-
-
 struct Prophet6
 {
     Prophet6();
@@ -92,7 +90,7 @@ struct Prophet6
     };
 
     void modCutoff(float filterCutoff);
-    void playSequence();
+    void displaySequence(std::vector<int> sequence);
     void engageFX();
 };
 
@@ -131,8 +129,17 @@ void Prophet6::modCutoff(float lfo)
 {
     filterCutoff += lfo;
 }
-void Prophet6::playSequence()
-{}
+void Prophet6::displaySequence(std::vector<int> sequence)
+{
+    std::cout << "Sequence: ";
+    for (unsigned long i = 0; i < sequence.size(); ++i)
+    {
+        currentNote = sequence[i];
+        std::cout << currentNote << ", ";
+    }
+    std::cout << "\n";
+    // for loop iterates through each step of the sequence and displays the current note
+}
 
 void Prophet6::engageFX()
 {
@@ -148,13 +155,35 @@ struct Tr808
     float voiceLevel{0.0f};
     int preset{0};
     int tempo = 135;
-    bool sequence[16];
+    std::vector<bool> sequence{true, false, false, false};
     float tone{12.5};
 
+    void clearSequence();
     void playSequence();
     void adjustTone(float knobTurn);
     void adjustLevel(float knobTurn);
 };
+
+void Tr808::clearSequence()
+{
+    int stepsActive = 0;
+    for (unsigned long i = 0; i < sequence.size(); ++i)
+    { 
+        if (sequence[i] == true)
+        {
+            sequence[i] = false;
+            stepsActive += 1;
+        }
+    }   // for loop finds all active step triggers and turns them off while keeping track of how many were on
+    if (stepsActive == 0)
+    {
+        std::cout << "Sequence already cleared!\n";
+    }
+    else 
+    {
+        std::cout << "Sequence cleared!\n";
+    }
+}
 
 Tr808::Tr808()
 {}
@@ -294,11 +323,10 @@ void Oscillator::hardSync(std::vector<double> inputSignal)
         //when a value in the array/signal is zero, the signal's cycle is at the beginning of its phase
         if (inputSignal[i] == 0.0)
         {
-            resetPhase();
+            phase = 0.0f;
         }
     }
 }
-
 
 struct Filter
 {
@@ -309,6 +337,7 @@ struct Filter
     float resonance{0.0f};
     float gain{10.0f};
 
+    std::vector<float> movingAvrgFilter(std::vector<float> signal);
     void changeResonance(float change);
     void trackPitch(float cv);
     void modFilter(float cv);
@@ -317,6 +346,14 @@ struct Filter
 Filter::Filter()
 {}
 
+std::vector<float> Filter::movingAvrgFilter(std::vector<float> signal)
+{
+    for (unsigned long i = 0; i < signal.size(); ++i)
+    {
+        signal[i] = (signal[i] + signal[i-1] + signal[i-2] + signal[i-3])/4;
+    }// for loop iterates through signal and applies a moving average to the samples
+    return signal;
+}
 void Filter::changeResonance(float change)
 {
     resonance += change;
@@ -402,7 +439,6 @@ void VCA::cascadeCV()
     }
 }
 
-
 void VCA::boost()
 {
     boostSwitch = !boostSwitch;
@@ -426,7 +462,7 @@ struct CVSequencer
 
     void changeNumSteps(int newNumSteps);
     void divideClock(int division);
-    std::vector<int> arp(int numStepsPressed);
+    std::vector<int> revArp(std::vector<int> noteOrder);
 };
 
 CVSequencer::CVSequencer() :
@@ -445,16 +481,14 @@ void CVSequencer::divideClock(int division)
     trigPerStep *= division;
 }
 
-std::vector<int> CVSequencer::arp(int numStepsPressed)
+std::vector<int> CVSequencer::revArp(std::vector<int> noteOrder)
 {
-    std::vector<int> arp; 
-    for (int i = 0; i <= numStepsPressed; ++i)
+    std::vector<int> revArp = {}; 
+    for (unsigned long i = noteOrder.size(); i-- != 0;)
     {
-        int stepNum = 1;
-        std::cout << stepNum;
-        arp.push_back(stepNum);
+        revArp.push_back(noteOrder[i]);
     }
-    return arp;
+    return revArp;
 }
 
 struct ModularSynth
@@ -523,11 +557,6 @@ void ModularSynth::modDecayEnv(std::string cvSource)
     patch(cvSource, "Decay");
 }
 
-
-
-
-
-
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
 
@@ -573,4 +602,22 @@ int main()
     std::cout << "Why isn't the MIDI clock not syncing on the Prophet? \n MIDIsync: " << myGlobals.transmitMidiClock << "\nOh, MIDI sync is disabled.""\n";
 
     std::cout << "good to go!" << std::endl;
+    std::cout << "\n";
+//===========================================Part5
+    myProphet6.displaySequence({23, 43, 21, 23});
+    std::cout << "\n";
+    aTr808.clearSequence();
+    std::cout << "\n";
+    sto.hardSync({1, 1, 1, 0, 1, 1, 1, 0});
+    std::cout << "hardSynced! Phase on this sample is reset: phase = " << sto.phase << "\n\n";
+   ladderFilter.movingAvrgFilter({2.32f, 23.2f, 86.3f, 43.1f, 92.6f, 123.0f, 62.5f, 53.9f, 24.2f});
+   dualVCA.cascadeCV();
+   std::cout << "CV input 2 now takes cv going into input 1\nCVInputOne = " << dualVCA.cvInputOne << ", CVInputTwo = " << dualVCA.cvInputTwo << "\n";
+   std::cout << "\n";
+   std::vector<int> revArp = voltageBlock.revArp({1,2,3,4});
+   std::cout << "Reversed arp: ";
+   for(unsigned long i = 0; i < revArp.size(); ++i)
+   {
+       std::cout << revArp[i];
+   }
 }
