@@ -185,7 +185,6 @@ void Tr808::clearSequence()
     }
 }
 
-
 Tr808::Tr808()
 {}
 
@@ -329,7 +328,6 @@ void Oscillator::hardSync(std::vector<double> inputSignal)
     }
 }
 
-
 struct Filter
 {
     Filter();
@@ -440,7 +438,6 @@ void VCA::cascadeCV()
         }
     }
 }
-
 
 void VCA::boost()
 {
@@ -560,11 +557,6 @@ void ModularSynth::modDecayEnv(std::string cvSource)
     patch(cvSource, "Decay");
 }
 
-
-
-
-
-
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
 
@@ -628,10 +620,4 @@ int main()
    {
        std::cout << revArp[i];
    }
-   
-
- 
-
-
-
 }
