@@ -484,7 +484,7 @@ void CVSequencer::divideClock(int division)
 std::vector<int> CVSequencer::revArp(std::vector<int> noteOrder)
 {
     std::vector<int> revArp = {}; 
-    for (unsigned long i = noteOrder.size(); --i != 0;)
+    for (unsigned long i = noteOrder.size(); i-- != 0;)
     {
         revArp.push_back(noteOrder[i]);
     }
